@@ -1,7 +1,7 @@
 name = "LinComs"
 uuid = "ee17a876-90d7-4d55-b638-625859505c6a"
 authors = ["xq "]
-version = "0.1.0"
+version = "0.1.1"
 
 [deps]
 EventStudyInteracts = "f9322581-1cea-4fd6-9e8e-2ae6cc4618ce"
