@@ -12,6 +12,10 @@ I wrote the [`EventStudyInteracts.jl`](https://github.com/FixedEffects/FixedEffe
 
 This package can also be used for t-tests of linear combinations of results from FixedEffectModels.jl.
 
+## Installation
+
+The package is registered in the [`General`](https://github.com/JuliaRegistries/General) registry and so can be installed at the REPL with `] add LinComs`.
+
 ## Usage
 
 After estimating the results using [`EventStudyInteracts.jl`](https://github.com/FixedEffects/FixedEffectModels.jl), you can refer to the following code to estimate the ATE.
