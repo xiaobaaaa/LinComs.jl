@@ -2,7 +2,7 @@
 Linear combinations of parameters
 ## Introduction
 
-Linear combinations of parameters for [`FixedEffectModels.jl`](https://github.com/FixedEffects/FixedEffectModels.jl) and [`EventStudyInteracts.jl`](https://github.com/FixedEffects/FixedEffectModels.jl) like Stata package `lincom`. As Stata package `lincom` help document explains:
+Linear combinations of parameters for [`FixedEffectModels.jl`](https://github.com/FixedEffects/FixedEffectModels.jl) and [`EventStudyInteracts.jl`](https://github.com/xiaobaaaa/EventStudyInteracts.jl) like Stata package `lincom`. As Stata package `lincom` help document explains:
 
 > `lincom` computes point estimates, standard errors, t or z statistics, p-values, and confidence intervals for linear combinations of coefficients after any estimation command, including survey estimation. Results can optionally be displayed as odds ratios, hazard ratios, incidence-rate ratios, or relative-risk ratios.
 
