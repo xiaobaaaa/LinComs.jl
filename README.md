@@ -1,15 +1,14 @@
 # LinComs.jl
 
-Linear combinations of coefficients for Julia regression models, with `FixedEffectModels.jl` and `EventStudyInteracts.jl` as the main use cases.
+Linear combinations of coefficients for Julia regression models. `LinComs.jl` works through the standard `StatsAPI` / `StatsBase` regression interface, so it can sit on top of packages like `FixedEffectModels.jl` and `EventStudyInteracts.jl` without depending on them directly.
 
 ## Status
 
 The current package line is prepared for:
 
 - `Julia 1.10+`
-- `FixedEffectModels.jl 1.13`
-- `EventStudyInteracts.jl 0.2`
-- `Vcov.jl 0.8`
+- generic `RegressionModel` results exposing `coef`, `coefnames`, `vcov`, `dof_residual`, and `responsename`
+- tested locally against `FixedEffectModels.jl 1.13`
 
 ## Installation
 
@@ -59,7 +58,7 @@ m = eventreg(df, formula1, rel_varlist1, control_cohort1, cohort1, vcov1)
 lincom(m, :((g0 + g1 + g2 + g3 + g4) / 5))
 ```
 
-A typical use case is aggregating post-treatment event-study coefficients into an average treatment effect.
+A typical use case is aggregating post-treatment event-study coefficients into an average treatment effect. `EventStudyInteracts.jl` is an optional companion package here; `LinComs.jl` itself does not require it to install.
 
 ## Development
 

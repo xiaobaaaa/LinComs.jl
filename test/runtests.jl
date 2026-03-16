@@ -3,7 +3,6 @@ using FixedEffectModels
 using LinComs
 using StatsAPI
 using StatsBase
-using StatsModels
 using Test
 using Vcov
 

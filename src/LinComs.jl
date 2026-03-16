@@ -6,18 +6,12 @@ module LinComs
 #	@eval Base.Experimental.@optlevel 1
 #end
 
-using FixedEffectModels
-using EventStudyInteracts
 using LinearAlgebra
 using Printf
-using Reexport
 using Statistics
 using StatsAPI
 using StatsBase
 using StatsFuns
-@reexport using StatsModels
-using Tables
-using Vcov
 
 include("LinComfit.jl")
 include("LinComfuncs.jl")
