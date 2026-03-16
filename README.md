@@ -1,40 +1,73 @@
 # LinComs.jl
-Linear combinations of parameters
-## Introduction
 
-Linear combinations of parameters for [`FixedEffectModels.jl`](https://github.com/FixedEffects/FixedEffectModels.jl) and [`EventStudyInteracts.jl`](https://github.com/xiaobaaaa/EventStudyInteracts.jl) like Stata package `lincom`. As Stata package `lincom` help document explains:
+Linear combinations of coefficients for Julia regression models, with `FixedEffectModels.jl` and `EventStudyInteracts.jl` as the main use cases.
 
-> `lincom` computes point estimates, standard errors, t or z statistics, p-values, and confidence intervals for linear combinations of coefficients after any estimation command, including survey estimation. Results can optionally be displayed as odds ratios, hazard ratios, incidence-rate ratios, or relative-risk ratios.
+## Status
 
-`lincom` can be used to aggregating event study estimates and estimate the average effect when use the Stata package [`eventstudyinteract`](https://github.com/lsun20/EventStudyInteract) provided by [Sun and Abraham (2021)](https://www.sciencedirect.com/science/article/abs/pii/S030440762030378X).
+The current package line is prepared for:
 
-I wrote the [`EventStudyInteracts.jl`](https://github.com/FixedEffects/FixedEffectModels.jl) package, which is a Julia replication of the Stata package [`eventstudyinteract`](https://github.com/lsun20/EventStudyInteract) provided by [Sun and Abraham (2021)](https://www.sciencedirect.com/science/article/abs/pii/S030440762030378X). However, there is currently no package in Julia similar to lincom, so I wrote this package.
-
-This package can also be used for t-tests of linear combinations of results from FixedEffectModels.jl.
+- `Julia 1.10+`
+- `FixedEffectModels.jl 1.13`
+- `EventStudyInteracts.jl 0.2`
+- `Vcov.jl 0.8`
 
 ## Installation
 
-The package is registered in the [`General`](https://github.com/JuliaRegistries/General) registry and so can be installed at the REPL with `] add LinComs`.
-
-## Usage
-
-After estimating the results using [`EventStudyInteracts.jl`](https://github.com/FixedEffects/FixedEffectModels.jl), you can refer to the following code to estimate the ATE.
+`LinComs.jl` is registered in the [`General`](https://github.com/JuliaRegistries/General) registry.
 
 ```julia
-rel_varlist1 = [:g_3,:g_2 ,:g0 ,:g1 ,:g2 ,:g3 ,:g4]
-
-m1 = eventreg(df, formula1, rel_varlist1, control_cohort1, cohort1, vcov1)
-
-expr = :((g0+g1+g2+g3+g4)/5)
-
-lincom(m1,expr)
-# Which will return a result like this.
-                                   lincom                                   
-=============================================================================
-ln_wage            |  Estimate Std.Error t value Pr(>|t|) Lower 95% Upper 95%
------------------------------------------------------------------------------
-Linear Combination | 0.0561422  0.012538 4.47776    0.000 0.0315618 0.0807226
-=============================================================================
+using Pkg
+Pkg.add("LinComs")
 ```
 
-Thanks to newbing.
+## What It Does
+
+`lincom(...)` computes a linear combination of estimated coefficients and returns a lightweight result object with:
+
+- the combined estimate
+- the implied variance-covariance matrix
+- t statistics, p values, and confidence intervals through `coeftable(...)` and `confint(...)`
+
+The implementation works with regression results that expose the standard `StatsAPI` accessors used here: `coef`, `coefnames`, `vcov`, `dof_residual`, and `responsename`.
+
+## FixedEffectModels Example
+
+```julia
+using DataFrames
+using FixedEffectModels
+using LinComs
+using Vcov
+
+
+df = DataFrame(
+    y = [1.0, 2.2, 3.1, 4.5, 5.2, 6.8, 7.1, 8.9],
+    x1 = [0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0],
+    x2 = [1.0, 1.5, 1.8, 2.2, 2.9, 3.1, 3.8, 4.0],
+)
+
+m = reg(df, @formula(y ~ x1 + x2), Vcov.simple())
+lincom(m, :(x1 + 2 * x2))
+```
+
+## EventStudyInteracts Example
+
+```julia
+using EventStudyInteracts
+using LinComs
+
+m = eventreg(df, formula1, rel_varlist1, control_cohort1, cohort1, vcov1)
+lincom(m, :((g0 + g1 + g2 + g3 + g4) / 5))
+```
+
+A typical use case is aggregating post-treatment event-study coefficients into an average treatment effect.
+
+## Development
+
+This repository includes:
+
+- CI on `main`
+- `CompatHelper`
+- `TagBot`
+- a minimal regression test suite under [`test/runtests.jl`](test/runtests.jl)
+
+For releases, bump `Project.toml`, run the tests, register with `Registrator`, and let `TagBot` create the Git tag and GitHub release.

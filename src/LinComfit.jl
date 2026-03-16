@@ -18,11 +18,12 @@ function StatsAPI.fit(::Type{RegressionModel},
 
     b = coef(regresult)
     coef_lincom = [sum(weights .* b')]
-    vcov_regresult = vcov(regresult)
+    vcov_regresult = copy(vcov(regresult))
     replace!(vcov_regresult, NaN => 0)
     vcov_lincom = weights * vcov_regresult * weights'
     coef_names = ["Linear Combination"]
     response_name = responsename(regresult)
-    dof_residual = regresult.dof_residual
+    dof_residual = StatsAPI.dof_residual(regresult)
     return LinCom(coef_lincom, vcov_lincom, dof_residual, coef_names, response_name)
 end
+
